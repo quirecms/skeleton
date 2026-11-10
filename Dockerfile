@@ -56,8 +56,10 @@ ENV APP_ENV=prod
 
 COPY --link frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 
-# prevent the reinstallation of vendors at every changes in the source code
-COPY --link composer.* symfony.* ./
+# prevent the reinstallation of vendors at every changes in the source code; with the site's own themes
+# and extensions (quire:make:theme, quire:make:extension), which Composer installs from those folders
+# (a site without them is fine)
+COPY --link --parents composer.* symfony.* themes/*/ extensions/*/ ./
 RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
 # copy sources
